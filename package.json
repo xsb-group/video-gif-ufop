@@ -1,0 +1,29 @@
+{
+  "name": "video-gif-ufop",
+  "version": "1.0.0",
+  "description": "七牛ufop视频截取帧生成gif",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xsb-group/video-gif-ufop.git"
+  },
+  "keywords": [
+    "qiniu",
+    "ufop",
+    "gif",
+    "video"
+  ],
+  "author": "SharksevenRo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xsb-group/video-gif-ufop/issues"
+  },
+  "homepage": "https://github.com/xsb-group/video-gif-ufop#readme",
+  "dependencies": {
+    "gify": "^0.2.0",
+    "koa": "^2.5.0"
+  }
+}
