@@ -4,7 +4,8 @@
   "description": "七牛ufop视频截取帧生成gif",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start src/index.js"
   },
   "repository": {
     "type": "git",
