@@ -38,4 +38,4 @@ RUN bash -c 'cd /root/workspace && npm install'
 
 EXPOSE  9100
 
-ENTRYPOINT pm2 start src/index.js && /bin/bash
+ENTRYPOINT npm start && /bin/bash
