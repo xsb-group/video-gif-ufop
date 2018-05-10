@@ -1,7 +1,13 @@
 FROM jrottenberg/ffmpeg
-MAINTAINER sharksevenRo<sharksevenluo@gmail.com>
 
-RUN apt-get -y update && apt-get install -y graphicsmagick curl
+RUN apt-get update
+RUN apt-get -y install software-properties-common
+RUN apt-get -y install unzip imagemagick curl
+
+# install fork of gifsicle with better lossless gif support
+ADD gifsicle-1.82.1-lossy.zip ./
+RUN unzip gifsicle-1.82.1-lossy.zip -d gifsicle
+RUN mv gifsicle/linux/gifsicle-debian6 /usr/local/bin/gifsicle
 
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
@@ -31,6 +37,9 @@ RUN curl -SLO "http://ipv4.mirrors.ustc.edu.cn/node/v$NODE_VERSION/node-v$NODE_V
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 ADD ./ /root/workspace
+
+WORKDIR /root/workspace
+
 
 WORKDIR /root/workspace
 RUN npm install pm2 -g

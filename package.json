@@ -24,7 +24,17 @@
   },
   "homepage": "https://github.com/xsb-group/video-gif-ufop#readme",
   "dependencies": {
+    "axios": "^0.18.0",
+    "bluebird": "^3.5.1",
+    "dotenv-safe": "^5.0.1",
+    "gifify": "^2.4.2",
     "gify": "^0.2.0",
-    "koa": "^2.5.0"
+    "imagemin": "^5.3.1",
+    "koa": "^2.5.0",
+    "koa-router": "^7.4.0",
+    "lodash": "^4.17.5",
+    "moment": "^2.22.1",
+    "qiniu": "^6.1.11",
+    "random-js": "^1.0.8"
   }
 }
