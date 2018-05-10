@@ -1,3 +1,4 @@
+// require('../../env');
 const path = require('path')
 const fs = require('fs');
 const Promise = require('bluebird');
@@ -6,7 +7,7 @@ const Axios = require('axios');
 const gifify = require('gifify');
 const qiniu = require('./qiniu')
 
-const TEMP_DIR = path.join(__dirname, 'temp');
+const TEMP_DIR = path.join('/Users/sharkseven/HLG/workspace/video-gif-ufop', 'temp');
 
 const pipeWrapper = function (readStream, fileName) {
     const tempVideo = path.join(TEMP_DIR, fileName);
@@ -20,9 +21,7 @@ const pipeWrapper = function (readStream, fileName) {
 }
 
 const gififyWrapper = function (input, output, opts) {
-    console.log(input, output);
     return new Promise((resolve, reject) => {
-        console.log('gifify')
         const gif = fs.createWriteStream(output);
         gifify(input, opts).pipe(gif);
         gif.on('close',() => resolve(output));
@@ -34,7 +33,7 @@ module.exports = function (url, opts = {
     resize: '200:-1',
     from: 1,
     to: 4
-}) {
+}, cdnPrefix = '') {
     // 获取文件名
     const fileName = url.match('.*/(.*?)$')[1];
     const gifName = `${fileName.split('.')[0]}.gif`;
@@ -50,17 +49,21 @@ module.exports = function (url, opts = {
     })
     .then(filename => {
         // upload gif
-        console.log(filename);
-        return qiniu.upload(filename, gifName);
+        return qiniu.upload(filename, path.join(cdnPrefix, gifName))
+        .then((res) => {
+            return Promise.try(() => {
+                fs.unlinkSync(path.join(TEMP_DIR, fileName));
+                fs.unlinkSync(path.join(TEMP_DIR, gifName));
+                return res.key;
+            });
+        });
     })
-    .then(filename => {
-        // remove temp file
-        return fs.unlinkSync(filename);
-    })
-    .then(() => {
-        console.log('finished')
+    .then((cdnpath) => {
+        return path.join(`https://${process.env.QINIU_HOST}`, cdnpath);
     })
     .catch(err => {
-        console.log(err);
+        throw err;
     })
 };
+
+// module.exports('https://st0.dancf.com/xsb/3/templets/0/20180410-110255-2.mp4')
