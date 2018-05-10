@@ -7,7 +7,7 @@ const Axios = require('axios');
 const gifify = require('gifify');
 const qiniu = require('./qiniu')
 
-const TEMP_DIR = path.join('/Users/sharkseven/HLG/workspace/video-gif-ufop', 'temp');
+const TEMP_DIR = path.join(__dirname, 'temp');
 
 const pipeWrapper = function (readStream, fileName) {
     const tempVideo = path.join(TEMP_DIR, fileName);
