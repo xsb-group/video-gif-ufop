@@ -14,6 +14,8 @@
 'use strict';
 
 const path = require('path');
+const { URL } = require('url');
+
 const axios = require('axios');
 const qiniu = require('qiniu');
 const lodash = require('lodash');

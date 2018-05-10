@@ -1,13 +1,15 @@
 // require('../../env');
 const path = require('path')
 const fs = require('fs');
+const { URL } = require('url');
+
 const Promise = require('bluebird');
 
 const Axios = require('axios');
 const gifify = require('gifify');
 const qiniu = require('./qiniu')
 
-const TEMP_DIR = path.join(__dirname, 'temp');
+const TEMP_DIR = path.join(process.cwd(), 'temp');
 
 const pipeWrapper = function (readStream, fileName) {
     const tempVideo = path.join(TEMP_DIR, fileName);
@@ -29,15 +31,17 @@ const gififyWrapper = function (input, output, opts) {
     })
 }
 
-module.exports = function (url, opts = {
+module.exports = function (distUrl, opts = {
     resize: '200:-1',
     from: 1,
     to: 4
 }, cdnPrefix = '') {
+    const url = new URL(distUrl);
     // 获取文件名
-    const fileName = url.match('.*/(.*?)$')[1];
+    const fileName = url.pathname.split('/').pop();
+    cdnPrefix = url.pathname.replace(fileName, '');
     const gifName = `${fileName.split('.')[0]}.gif`;
-    return Axios.get(url, {
+    return Axios.get(distUrl, {
         responseType: 'stream'
     })
     .then(response => {
