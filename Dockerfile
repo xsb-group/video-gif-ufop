@@ -2,7 +2,7 @@ FROM jrottenberg/ffmpeg
 
 RUN apt-get update
 RUN apt-get -y install software-properties-common
-RUN apt-get -y install unzip imagemagick curl tzdata ntpdate
+RUN apt-get -y install unzip imagemagick curl tzdata
 
 # install fork of gifsicle with better lossless gif support
 ADD gifsicle-1.82.1-lossy.zip ./
@@ -23,7 +23,8 @@ ADD ./ /root/workspace
 WORKDIR /root/workspace
 
 # 修改时区
-RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo 'Asia/Shanghai' >/etc/timezone
 # 同步时间
 # RUN ntpdate ntpdate  0.cn.pool.ntp.org
 

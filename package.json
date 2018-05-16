@@ -27,7 +27,6 @@
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
     "dotenv-safe": "^5.0.1",
-    "gifify": "^2.4.2",
     "gify": "^0.2.0",
     "imagemin": "^5.3.1",
     "koa": "^2.5.0",

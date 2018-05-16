@@ -35,11 +35,11 @@ module.exports = function (distUrl, opts = {
     resize: '200:-1',
     from: 1,
     to: 4
-}, cdnPrefix = '') {
+}, prefix = '') {
     const url = new URL(distUrl);
     // 获取文件名
     const fileName = url.pathname.split('/').pop();
-    cdnPrefix = url.pathname.replace(fileName, '');
+    prefix = url.pathname.replace(fileName, '/').slice();
     const gifName = `${fileName.split('.')[0]}.gif`;
     return Axios.get(distUrl, {
         responseType: 'stream'
@@ -53,7 +53,7 @@ module.exports = function (distUrl, opts = {
     })
     .then(filename => {
         // upload gif
-        return qiniu.upload(filename, path.join(cdnPrefix, gifName))
+        return qiniu.upload(filename, path.join(prefix.slice(1, -1), gifName))
         .then((res) => {
             return Promise.try(() => {
                 fs.unlinkSync(path.join(TEMP_DIR, fileName));
