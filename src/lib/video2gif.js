@@ -39,7 +39,7 @@ module.exports = function (distUrl, opts = {
     const url = new URL(distUrl);
     // 获取文件名
     const fileName = url.pathname.split('/').pop();
-    prefix = url.pathname.replace(fileName, '/').slice();
+    prefix = url.pathname.replace(fileName, '/');
     const gifName = `${fileName.split('.')[0]}.gif`;
     return Axios.get(distUrl, {
         responseType: 'stream'
