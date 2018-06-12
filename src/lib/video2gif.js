@@ -1,6 +1,7 @@
 // require('../../env');
 const path = require('path')
 const fs = require('fs');
+const exec = require('child_process').exec;
 const { URL } = require('url');
 
 const Promise = require('bluebird');
@@ -31,18 +32,37 @@ const gififyWrapper = function (input, output, opts) {
     })
 }
 
-module.exports = function (distUrl, opts = {
+const rmAll = function(dir) {
+    return new Promise((resolve, reject) => {
+        exec('rm -rf ' + dir, function(err, res){
+            if(err) {
+                reject(err);
+                return;
+            }
+            resolve(res);
+        });
+    });
+}
+
+module.exports = function (distUrl, fileName, opts = {
     resize: '200:-1',
     from: 1,
     to: 4
 }, prefix = '') {
     const url = new URL(distUrl);
     // 获取文件名
-    const fileName = url.pathname.split('/').pop();
-    prefix = url.pathname.replace(fileName, '/');
     const gifName = `${fileName.split('.')[0]}.gif`;
-    return Axios.get(distUrl, {
-        responseType: 'stream'
+    return Promise.try(() => {
+        console.log('test');
+        return rmAll(TEMP_DIR)
+        .then(() => {
+            fs.mkdirSync(TEMP_DIR);
+        });
+    })
+    .then(() => {
+        return Axios.get(distUrl, {
+            responseType: 'stream'
+        })
     })
     .then(response => {
         // writeFile
@@ -54,20 +74,14 @@ module.exports = function (distUrl, opts = {
     .then(filename => {
         // upload gif
         return qiniu.upload(filename, path.join(prefix.slice(1, -1), gifName))
-        .then((res) => {
-            return Promise.try(() => {
-                fs.unlinkSync(path.join(TEMP_DIR, fileName));
-                fs.unlinkSync(path.join(TEMP_DIR, gifName));
-                return res.key;
-            });
-        });
     })
     .then((cdnpath) => {
-        return path.join(`https://${process.env.QINIU_HOST}`, cdnpath);
+        return path.join(`https://${process.env.QINIU_HOST}`, cdnpath.key);
     })
     .catch(err => {
         throw err;
     })
 };
+
 
 // module.exports('https://st0.dancf.com/xsb/3/templets/0/20180410-110255-2.mp4')

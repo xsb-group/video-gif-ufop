@@ -1,7 +1,7 @@
 FROM jrottenberg/ffmpeg
 
 RUN apt-get update
-RUN apt-get -y install software-properties-common
+RUN apt-get -y install software-properties-common vim
 RUN apt-get -y install unzip imagemagick curl tzdata
 
 # install fork of gifsicle with better lossless gif support
@@ -28,9 +28,9 @@ RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
 # 同步时间
 # RUN ntpdate ntpdate  0.cn.pool.ntp.org
 
-RUN npm install pm2 -g
 RUN bash -c 'cd /root/workspace && npm install'
+
 
 EXPOSE  9100
 
-ENTRYPOINT npm start && /bin/bash
+ENTRYPOINT node src/index.js
