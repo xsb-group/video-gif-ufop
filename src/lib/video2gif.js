@@ -26,6 +26,7 @@ const pipeWrapper = function (readStream, fileName) {
 const gififyWrapper = function (input, output, opts) {
     return new Promise((resolve, reject) => {
         const gif = fs.createWriteStream(output);
+        console.log(opts)
         gifify(input, opts).pipe(gif);
         gif.on('close',() => resolve(output));
         gif.on('error', err => reject(err))
@@ -53,7 +54,7 @@ module.exports = function (distUrl, fileName, opts = {
     // 获取文件名
     const gifName = `${fileName.split('.')[0]}.gif`;
     return Promise.try(() => {
-        console.log('test');
+        // console.log('test');
         return rmAll(TEMP_DIR)
         .then(() => {
             fs.mkdirSync(TEMP_DIR);
@@ -73,7 +74,7 @@ module.exports = function (distUrl, fileName, opts = {
     })
     .then(filename => {
         // upload gif
-        return qiniu.upload(filename, path.join(prefix.slice(1, -1), gifName))
+        return qiniu.upload(filename, path.join(prefix, gifName))
     })
     .then((cdnpath) => {
         return path.join(`https://${process.env.QINIU_HOST}`, cdnpath.key);

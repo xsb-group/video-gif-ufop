@@ -28,8 +28,10 @@ app.use(koaBody());
  */
 router.post('/*', async (ctx, next) => {
     console.log(ctx.query, ctx.request.body)
+    const body = ctx.request.body;
     const url = ctx.query.url || ctx.request.body.url;
     const cmd = ctx.query.cmd || ctx.request.body.cmd;
+    
     try {
         const cmds = cmd.split('/');
         const ufop = cmds[0];
@@ -38,13 +40,11 @@ router.post('/*', async (ctx, next) => {
         }
         const fileName = cmds[cmds.length -2];
         const paramStrs = cmds[cmds.length - 1].split('-');
-        const param = {
-            from: +paramStrs[0],
-            to: +paramStrs[1],
-            resize: paramStrs[2] + ':-1',
-            compress: +paramStrs[3]
-        }
-        const prefix = cmd.replace(ufop, '').replace(fileName, '');
+        const param = body;
+        delete param.url;
+        delete param.cmd;
+
+        const prefix = cmd.replace(ufop + '/', '').replace(fileName, '');
         const query = Object.assign({
             resize: '200:-1',
             from: 5,

@@ -1,8 +1,8 @@
-qdoractl login -u xx -p xx
-docker build --no-cache=true -t xxx:v1.0.0 . &&
-qdoractl push xxx:v1.0.0
+# qdoractl login -u xx -p xx
+docker build -t video-gif:v1.0.0 .
+# qdoractl push xxx:v1.0.0
 
-# qdoractl register qntool-gif -d gif &&
+# qdoractl register qntool-gify -d gif &&
 
 # qdoractl release --config . &&
 
