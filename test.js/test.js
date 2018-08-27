@@ -29,31 +29,41 @@ for (let width = 100; width <= 500; width = width + 50) {
         return fpss;
 })
 .each(fps => {
+    return Promise.try(() => {
+        return [200, 250]
+    })
+    .each(width => {
         return Promise.try(() => {
-        return templets;
+            return templets;
         })
         .each(templet => {
             const fileName = templet.split('.com/')[1];
             const body = {
                 url: templet,
-                cmd: `qntool-gify/${fileName}/256-1-3-0-${fps}`,
+                cmd: `qntool-gify/${fileName}/256-1-1.5-0-${width}-2-${fps}`,
                 colors: 256,
                 fps: fps,
-                resize: 250 + ':-1',
+                resize: width + ':-1',
                 from: 1,
+                speed: 2,
                 compress: 0,
-                to: 3
+                to: 2
             }
+            console.log(body);
             return axios.post('http://localhost:9200/handler', body)
             .then(ret => {
                 console.log(ret.data);
                 results.push({
                     fps: fps,
                     url: ret.data.replace('https:/', 'https://'),
-                    width: 250
+                    width: width
                 })
             })
+            .catch(err => {
+                console.log(err);
+            })
         })
+    })
 })
 // console.log(fps)
 .then(() => {

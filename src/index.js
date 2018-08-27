@@ -7,6 +7,15 @@ const koaBody = require('koa-body');
 const video2gif = require('./lib/video2gif');
 const router = new Router();
 
+app.use(async (ctx, next) => {
+    try {
+        await ctx;
+    }
+    catch(err) {
+        console.log(err);
+    }
+});
+
 // response
 
 app.use(koaBody());
@@ -27,7 +36,7 @@ app.use(koaBody());
     videoUrl 视频路径
  */
 router.post('/*', async (ctx, next) => {
-    console.log(ctx.query, ctx.request.body)
+    // console.log(ctx.query, ctx.request.body)
     const body = ctx.request.body;
     const url = ctx.query.url || ctx.request.body.url;
     const cmd = ctx.query.cmd || ctx.request.body.cmd;
@@ -51,8 +60,8 @@ router.post('/*', async (ctx, next) => {
             to: 6.5,
             compress: 100,
         }, param);
-        console.log(query)
-        console.log(fileName, prefix)
+        // console.log(query)
+        // console.log(fileName, prefix)
         const cdnpath = await video2gif(url, fileName, query, prefix);
         ctx.body = cdnpath;
     }
